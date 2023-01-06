@@ -1,0 +1,105 @@
+#include<iostream>
+using namespace std;
+
+class Node{
+
+    public:
+    int data;
+    Node* next;
+
+    Node(int d){
+        this->data = d;
+        this->next = NULL;
+    }
+};
+
+//Function to take input
+Node* takeInput(){
+    int data;
+    cin>>data;
+    Node *head = NULL;
+    Node *tail = NULL;
+    while(data!=-1){
+        Node *newNode = new Node(data);
+        if(head==NULL){
+            head = newNode;
+            tail = newNode;
+        }
+        else{
+            tail -> next = newNode;
+            tail = newNode;
+        }
+        cin>>data;
+    }
+    return head;
+}
+
+//To find size of LL
+int sizeLL(Node* head){
+    Node* temp = head;
+    int size = 0;
+
+    while(temp!=NULL){
+        temp=temp->next;
+        size++;
+    }
+
+    return size;
+}
+
+//To find intersection point
+Node* intersection(Node* head1, Node* head2){
+    int s1 = sizeLL(head1);
+    int s2 = sizeLL(head2);
+
+    Node* temp1 = head1;
+    Node* temp2 = head2;
+
+    if(s1>=s2){
+        int k = s1-s2;
+        for(int i =0; i<k;i++){
+            temp1 = temp1->next;
+        }
+    }
+    else{
+        int k = s2-s1;
+        for(int i =0; i<k;i++){
+            temp2 = temp2->next;
+        }
+    }
+
+    while(temp1!=NULL && temp2!=NULL){
+        if(temp1->data == temp2->data){
+            return temp1;
+        }
+
+        temp1=temp1->next;
+        temp2=temp2->next;
+    }
+
+    return temp1;
+}
+
+//print the linked list
+void print(Node *head){
+    Node *temp = head;
+    while(temp!=NULL){
+        cout<<temp -> data<< " ";
+        temp = temp -> next;
+    }
+    cout<<endl;
+}
+
+int main(){
+
+    cout<<"Enter numbers of l1: "<<endl;
+    Node *head1 = takeInput();
+    cout<<"Enter numbers of l2: "<<endl;
+    Node *head2 = takeInput();
+
+    cout<<"Intersection point is: ";
+    Node* ans = intersection(head1,head2);
+    cout<<ans->data<<endl;    
+  
+    return 0;
+}
