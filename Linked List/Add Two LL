@@ -1,0 +1,127 @@
+#include<iostream>
+using namespace std;
+
+class Node{
+
+    public:
+    int data;
+    Node* next;
+
+    Node(int d){
+        this->data = d;
+        this->next = NULL;
+    }
+};
+
+//Function to take input
+Node* takeInput(){
+    int data;
+    cin>>data;
+    Node *head = NULL;
+    Node *tail = NULL;
+    while(data!=-1){
+        Node *newNode = new Node(data);
+        if(head==NULL){
+            head = newNode;
+            tail = newNode;
+        }
+        else{
+            tail -> next = newNode;
+            tail = newNode;
+        }
+        cin>>data;
+    }
+    return head;
+}
+
+Node* reverse(Node* head){
+        Node* prev = NULL;
+        Node* curr = head;
+        Node* fwd = NULL;
+        while(curr!= NULL){
+            fwd = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = fwd;
+        }
+        return prev;
+    } 
+
+void insertattail(Node* &head, Node* &tail, int val){
+         Node* temp = new Node(val);
+         if(head == NULL){
+             head = temp;
+             tail = temp;
+             return;
+         } 
+         else{
+             tail->next = temp;
+             tail = temp;
+         }
+    }
+
+//helper to add two lists
+Node* add(Node* l1, Node* l2){
+      int carry = 0;
+        Node* ansHead = NULL;
+        Node* ansTail = NULL;
+
+        while(l1 != NULL || l2 != NULL || carry!=0){
+            int val1= 0;
+            if(l1 != NULL){
+                val1 = l1->data;
+            }
+            int val2 =0;
+            if(l2!=NULL){
+                val2 = l2->data;
+            }
+
+            int sum = carry + val1 + val2;
+            int digit = sum%10;
+            insertattail(ansHead, ansTail, digit);
+            carry = sum/10;
+
+            if(l1 != NULL){
+                l1 = l1->next;
+            }
+            if(l2 != NULL){
+                 l2= l2->next;
+            }
+           
+        }
+         return ansHead;
+}
+
+//TO add two lists
+Node* addTwoList(Node* h1, Node* h2){
+        Node* first = reverse(h1);
+        Node* second = reverse(h2);
+        Node* ans = add(first, second);
+        ans = reverse(ans);
+        return ans;
+}
+
+//print the linked list
+void print(Node *head){
+    Node *temp = head;
+    while(temp!=NULL){
+        cout<<temp -> data<< " ";
+        temp = temp -> next;
+    }
+    cout<<endl;
+}
+
+int main(){
+
+    cout<<"Enter numbers of l1: "<<endl;
+    Node *head1 = takeInput();
+    
+    cout<<"Enter numbers of l2: "<<endl;
+    Node *head2 = takeInput();
+    
+    Node* sum = addTwoList(head1,head2);
+
+    print(sum);
+  
+    return 0;
+}
