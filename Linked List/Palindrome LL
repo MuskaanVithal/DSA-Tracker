@@ -1,0 +1,94 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+
+class Node{
+
+    public:
+    char data;
+    Node* next;
+
+    Node(char d){
+        this->data = d;
+        this->next = NULL;
+    }
+};
+
+//Function to take input
+Node* takeInput(){
+    char data;
+    cin>>data;
+    Node *head = NULL;
+    Node *tail = NULL;
+    while(data!='/'){
+        Node *newNode = new Node(data);
+        if(head==NULL){
+            head = newNode;
+            tail = newNode;
+        }
+        else{
+            tail -> next = newNode;
+            tail = newNode;
+        }
+        cin>>data;
+    }
+    cout<<"Input taken"<<endl;
+    return head;
+}
+
+//Function to check if ll is palindrome
+bool isPalindrome(Node*head){
+
+    Node* temp = head;
+
+    stack<char> s;
+
+    while(temp!= NULL){
+        s.push(temp->data);
+        temp = temp->next;
+    }
+
+    Node* temp2 = head;
+
+    while(temp2!= NULL){
+        int x = s.top();
+        s.pop();
+
+        if(temp2->data != x){
+            return false;
+        }
+
+        temp2=temp2->next;
+    }
+
+    return true;
+
+}
+
+//print the linked list
+void print(Node *head){
+    Node *temp = head;
+    while(temp!=NULL){
+        cout<<temp -> data<< " ";
+        temp = temp -> next;
+    }
+    cout<<endl;
+}
+
+int main(){
+
+    cout<<"Enter characters: "<<endl;
+    Node *head = takeInput();
+   // print(head);
+
+    cout<<"The given LL is a palindrome: ";
+    bool ans = isPalindrome(head);
+    if(ans){
+        cout<<"true"<<endl;
+    }
+    else{
+        cout<<"false"<<endl;
+    }
+  
+    return 0;
+}
