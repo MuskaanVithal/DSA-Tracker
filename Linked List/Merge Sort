@@ -1,0 +1,162 @@
+#include <iostream>
+
+class Node
+{
+public:
+	int data;
+	Node *next;
+	Node(int data)
+	{
+		this->data = data;
+		this->next = NULL;
+	}
+};
+
+using namespace std;
+
+
+Node *takeinput()
+{
+	int data;
+	cin >> data;
+	Node *head = NULL, *tail = NULL;
+	while (data != -1)
+	{
+		Node *newnode = new Node(data);
+		if (head == NULL)
+		{
+			head = newnode;
+			tail = newnode;
+		}
+		else
+		{
+			tail->next = newnode;
+			tail = newnode;
+		}
+		cin >> data;
+	}
+	return head;
+}
+
+void print(Node *head)
+{
+	Node *temp = head;
+	while (temp != NULL)
+	{
+		cout << temp->data << " ";
+		temp = temp->next;
+	}
+	cout << endl;
+}
+
+//merge sorted ll
+Node *mergeTwoSortedLinkedLists(Node *head1, Node *head2)
+{
+    if(head1 == NULL){
+        return head2; 
+    }
+    else if(head2 == NULL){
+        return head1; 
+    }
+    
+    Node *fh = NULL;
+    if(head1 -> data <= head2 -> data){
+            fh = head1;
+            head1 = head1 -> next;
+        }
+        
+    else{
+            fh = head2;
+            head2 = head2 -> next;
+        }
+
+    Node *ft = fh;
+    
+    while(head1 != NULL && head2 != NULL){
+    	Node *temp = NULL;
+	
+        if(head1 -> data <= head2 -> data){
+            temp = head1;
+            head1 = head1 -> next;
+        }
+        else{
+            temp = head2;
+            head2 = head2 -> next;
+        }
+        
+        ft->next=temp;
+        ft=temp;
+    }
+    
+    if(head1 != NULL) {
+        ft -> next = head1;
+    }
+    else if(head2 != NULL) {
+        ft -> next = head2;
+    }
+    
+    return fh;
+}
+
+// return mid point of ll
+Node *midPoint(Node *head)
+{
+    if(head == NULL){
+        return head;
+    }
+    Node *slow = head;
+    Node *fast = head -> next;
+    
+    while(fast != NULL && fast ->next != NULL){
+        slow = slow -> next;
+        fast = fast -> next -> next;
+    }
+    
+    return slow;
+}
+
+//length of linked list
+int length(Node *head) {
+    Node *temp = head;
+    
+    if(temp == NULL) 	{return 0;}
+    
+    if(temp->next == NULL)	{return 1;}
+    
+    if(temp-> next !=NULL){
+        return length(temp-> next)+1;
+    }
+}
+
+//merge Sort
+Node *mergeSort(Node *head)
+{
+	int l = length(head);
+    
+    if(l==1 || l==0){return head;}
+    
+    Node *m = midPoint(head);
+    Node *h1 = head;
+    Node *h2 = m -> next;
+    m->next = NULL;
+    
+    h1 = mergeSort(h1);
+    h2 = mergeSort(h2);
+    
+    Node *h = mergeTwoSortedLinkedLists(h1,h2);
+    
+    return h;
+}
+
+int main()
+{
+        cout<<"Enter Linked List: "<<endl;	
+		Node *head = takeinput();
+
+        cout<<"Sorted LL is: ";
+		head = mergeSort(head);
+		print(head);
+	
+
+	return 0;
+}
