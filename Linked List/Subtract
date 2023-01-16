@@ -1,0 +1,119 @@
+#include<iostream>
+using namespace std;
+
+class Node{
+
+    public:
+    int data;
+    Node* next;
+
+    Node(int d){
+        this->data = d;
+        this->next = NULL;
+    }
+};
+
+//Function to take input
+Node* takeInput(){
+    int data;
+    cin>>data;
+    Node *head = NULL;
+    Node *tail = NULL;
+    while(data!=-1){
+        Node *newNode = new Node(data);
+        if(head==NULL){
+            head = newNode;
+            tail = newNode;
+        }
+        else{
+            tail -> next = newNode;
+            tail = newNode;
+        }
+        cin>>data;
+    }
+    return head;
+}
+
+//Reverse Linked list
+Node* reverseLL(Node* head){
+    Node* prev = NULL;
+    Node* curr = head;
+    //Node* temp=NULL;
+    while(curr!=NULL){
+        Node* temp = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = temp;
+    }
+
+    head = prev;
+    return head;
+}
+
+//Subtract
+Node *subtractTwoNumbers(Node *l1, Node *l2)
+{
+    if (l2 == NULL)
+        return l1;
+    if (l1 == NULL)
+    {
+        l2->data = -(l2->data);
+        return l2;
+    }
+    l1 = reverseLL(l1);
+    l2 = reverseLL(l2);
+    Node *p1 = l1;
+    Node *p2 = l2;
+    Node *ans = new Node(-1);
+    Node *p = ans;
+    int val = 0, borrow = 0;
+    while (p1)
+    {
+        val = borrow + p1->data - (p2 != NULL ? p2->data : 0);
+        if (val < 0)
+        {
+            val += 10;
+            borrow = -1;
+        }
+        else
+        {
+            borrow = 0;
+        }
+        p->next = new Node(val);
+        p = p->next;
+        p1 = p1->next;
+        if (p2)
+        {
+            p2 = p2->next;
+        }
+    }
+    return reverseLL(ans->next);
+}
+
+//print the linked list
+void print(Node *head){
+    Node *temp = head;
+    while(temp!=NULL){
+        cout<<temp -> data<< " ";
+        temp = temp -> next;
+    }
+    cout<<endl;
+}
+
+int main(){
+
+    cout<<"Enter numbers of first: "<<endl;
+    Node *head1 = takeInput();
+    cout<<"Enter numbers of second: "<<endl;
+    Node*head2 = takeInput();
+    print(head1);
+    print(head2);
+
+    Node* diff = subtractTwoNumbers(head1,head2);   
+    
+    cout<<"Difference of both LL is: ";
+    print(diff);
+    
+    cout<<endl;
+    return 0;
+}
