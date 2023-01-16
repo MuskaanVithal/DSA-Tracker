@@ -1,0 +1,131 @@
+#include<iostream>
+using namespace std;
+
+class Node{
+
+    public:
+    int data;
+    Node* next;
+
+    Node(int d){
+        this->data = d;
+        this->next = NULL;
+    }
+};
+
+//Function to take input
+Node* takeInput(){
+    int data;
+    cin>>data;
+    Node *head = NULL;
+    Node *tail = NULL;
+    while(data!=-1){
+        Node *newNode = new Node(data);
+        if(head==NULL){
+            head = newNode;
+            tail = newNode;
+        }
+        else{
+            tail -> next = newNode;
+            tail = newNode;
+        }
+        cin>>data;
+    }
+    return head;
+}
+
+//Reverse Linked list
+Node* reverseLL(Node* head){
+    Node* prev = NULL;
+    Node* curr = head;
+    //Node* temp=NULL;
+    while(curr!=NULL){
+        Node* temp = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = temp;
+    }
+
+    head = prev;
+    return head;
+}
+
+//Sum
+Node *addTwoNumbers(Node *l1, Node *l2)
+{
+    if (l1 == NULL)
+        return l2;
+    if (l2 == NULL)
+        return l1;
+    l1 = reverseLL(l1);
+    l2 = reverseLL(l2);
+    Node *p1 = l1;
+    Node *p2 = l2;
+    Node *ans = new Node(-1);
+    Node *p = ans;
+    int sum = 0, carry = 0;
+    while (p1 && p2)
+    {
+        sum = p1->data + p2->data + carry;
+        carry = sum / 10;
+        sum = sum % 10;
+        p->next = new Node(sum);
+        p1 = p1->next;
+        p2 = p2->next;
+        p = p->next;
+    }
+    while (p1)
+    {
+        sum = p1->data + carry;
+        carry = sum / 10;
+        sum = sum % 10;
+        p->next = new Node(sum);
+        p1 = p1->next;
+        p = p->next;
+    }
+
+    while (p2)
+    {
+        sum = p2->data + carry;
+        carry = sum / 10;
+        sum = sum % 10;
+        p->next = new Node(sum);
+        p2 = p2->next;
+        p = p->next;
+    }
+    if (carry != 0)
+    {
+        p->next = new Node(carry);
+    }
+    ans = ans->next;
+    ans = reverseLL(ans);
+    return ans;
+}
+
+//print the linked list
+void print(Node *head){
+    Node *temp = head;
+    while(temp!=NULL){
+        cout<<temp -> data<< " ";
+        temp = temp -> next;
+    }
+    cout<<endl;
+}
+
+int main(){
+
+    cout<<"Enter numbers of first: "<<endl;
+    Node *head1 = takeInput();
+    cout<<"Enter numbers of second: "<<endl;
+    Node*head2 = takeInput();
+    print(head1);
+    print(head2);
+
+    Node* sum = addTwoNumbers(head1,head2);   
+    
+    cout<<"addition of both LL is: ";
+    print(sum);
+    
+    cout<<endl;
+    return 0;
+}
