@@ -1,0 +1,190 @@
+#include<iostream>
+using namespace std;
+
+class Node{
+
+    public:
+    int data;
+    Node* next;
+
+    Node(int d){
+        this->data = d;
+        this->next = NULL;
+    }
+};
+
+//Function to take input
+Node* takeInput(){
+    int data;
+    cin>>data;
+    Node *head = NULL;
+    Node *tail = NULL;
+    while(data!=-1){
+        Node *newNode = new Node(data);
+        if(head==NULL){
+            head = newNode;
+            tail = newNode;
+        }
+        else{
+            tail -> next = newNode;
+            tail = newNode;
+        }
+        cin>>data;
+    }
+    return head;
+}
+
+//Reverse Linked list
+Node* reverse(Node* head){
+    Node* prev = NULL;
+    Node* curr = head;
+    //Node* temp=NULL;
+    while(curr!=NULL){
+        Node* temp = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = temp;
+    }
+
+    head = prev;
+    return head;
+}
+
+//Sum
+Node *addTwoNumbers(Node *l1, Node *l2)
+{
+    if (l1 == NULL)
+        return l2;
+    if (l2 == NULL)
+        return l1;
+    l1 = reverse(l1);
+    l2 = reverse(l2);
+    Node *p1 = l1;
+    Node *p2 = l2;
+    Node *ans = new Node(-1);
+    Node *p = ans;
+    int sum = 0, carry = 0;
+    while (p1 && p2)
+    {
+        sum = p1->data + p2->data + carry;
+        carry = sum / 10;
+        sum = sum % 10;
+        p->next = new Node(sum);
+        p1 = p1->next;
+        p2 = p2->next;
+        p = p->next;
+    }
+    while (p1)
+    {
+        sum = p1->data + carry;
+        carry = sum / 10;
+        sum = sum % 10;
+        p->next = new Node(sum);
+        p1 = p1->next;
+        p = p->next;
+    }
+
+    while (p2)
+    {
+        sum = p2->data + carry;
+        carry = sum / 10;
+        sum = sum % 10;
+        p->next = new Node(sum);
+        p2 = p2->next;
+        p = p->next;
+    }
+    if (carry != 0)
+    {
+        p->next = new Node(carry);
+    }
+    ans = ans->next;
+    ans = reverse(ans);
+    return ans;
+}
+
+Node *multiplyWithDigit(Node *head, int digit)
+{
+    Node *ans = new Node(-1);
+    Node *p = ans;
+    Node *curr = head;
+    int carry = 0;
+    while (curr || carry != 0)
+    {
+        int sum = carry + (curr != NULL ? curr->data : 0) * digit;
+        carry = sum / 10;
+        int val = sum % 10;
+
+        p->next = new Node(val);
+        p = p->next;
+        if (curr)
+            curr = curr->next;
+    }
+    return ans->next;
+}
+void addToMultiply(Node *prod, Node* &ansPtr)
+{
+    Node *p1 = prod;
+    Node *p2 = ansPtr;
+    int carry = 0;
+    while (p1 || carry != 0)
+    {
+        int sum = carry + (p1? p1->data: 0) +(p2->next? p2->next->data : 0);
+
+        carry = sum/10;
+        int val = sum%10;
+
+
+        if(p2->next)
+        p2->next->data = val;
+        else
+        p2->next = new Node(val);
+
+        p2 = p2->next;
+        if(p1) p1 = p1->next;
+    }
+
+}
+Node *multiplyTwoLL(Node *l1, Node *l2)
+{
+    l1 = reverse(l1);
+    l2 = reverse(l2);
+    Node *ans = new Node(-1);
+    Node *ansPtr = ans;
+    Node *l2Ptr = l2;
+    while (l2Ptr)
+    {
+        Node *prod = multiplyWithDigit(l1, l2Ptr->data);
+        addToMultiply(prod, ansPtr);
+        ansPtr = ansPtr->next;
+        l2Ptr = l2Ptr->next;
+    }
+    return reverse(ans->next);
+}
+
+//print the linked list
+void print(Node *head){
+    Node *temp = head;
+    while(temp!=NULL){
+        cout<<temp -> data<< " ";
+        temp = temp -> next;
+    }
+    cout<<endl;
+}
+
+int main(){
+
+    cout<<"Enter numbers of first: "<<endl;
+    Node *head1 = takeInput();
+    cout<<"Enter numbers of second: "<<endl;
+    Node*head2 = takeInput();
+    print(head1);
+    print(head2);
+
+    Node* prod = multiplyTwoLL(head1,head2);   
+    
+    cout<<"Multiplication of both LL is: ";
+    print(prod);
+    
+    cout<<endl;
+    return 0;
+}
