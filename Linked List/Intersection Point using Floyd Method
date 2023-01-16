@@ -1,0 +1,110 @@
+#include<iostream>
+using namespace std;
+
+class Node{
+
+    public:
+    int data;
+    Node* next;
+
+    Node(int d){
+        this->data = d;
+        this->next = NULL;
+    }
+};
+
+//Function to take input
+Node* takeInput(){
+    int data;
+    cin>>data;
+    Node *head = NULL;
+    Node *tail = NULL;
+    while(data!=-1){
+        Node *newNode = new Node(data);
+        if(head==NULL){
+            head = newNode;
+            tail = newNode;
+        }
+        else{
+            tail -> next = newNode;
+            tail = newNode;
+        }
+        cin>>data;
+    }
+    return head;
+}
+
+//Intersection using Floyad Cycle Method
+Node* intersectionLLHelper(Node* head){
+
+    if(head==NULL || head->next == NULL){
+        return NULL;
+    }
+
+    Node* slow = head;
+    Node* fast = head;
+
+    while(fast!=NULL || fast->next!=NULL){
+        
+        slow = slow->next;
+        fast=fast->next->next;
+
+        if(slow==fast){
+            break;
+        }
+    }
+
+    while(slow!=fast){
+
+        slow=slow->next;
+        fast=fast->next;
+    }
+
+    return slow;
+}
+
+//Join given two LL
+Node* joinLL(Node* head1, Node* head2){
+    if(head1==NULL || head2==NULL)  return NULL;
+
+    Node* tail = head1;
+
+    while( tail->next!=NULL){
+        tail = tail->next;
+    }
+    tail->next = head2;
+
+    Node* ans = intersectionLLHelper(head1);
+
+    tail->next = NULL;
+    cout<<"Exit joinLL"<<endl;
+
+    return ans;
+}
+
+//print the linked list
+void print(Node *head){
+    Node *temp = head;
+    while(temp!=NULL){
+        cout<<temp -> data<< " ";
+        temp = temp -> next;
+    }
+    cout<<endl;
+}
+
+int main(){
+
+    cout<<"Enter numbers of first: "<<endl;
+    Node *head1 = takeInput();
+    cout<<"Enter numbers of second: "<<endl;
+    Node*head2 = takeInput();
+    print(head1);
+    print(head2);
+
+    Node* intersectionPoint = joinLL(head1,head2);   
+    
+    cout<<"Intersection of both LL is: "<<intersectionPoint->data;
+    
+    cout<<endl;
+    return 0;
+}
