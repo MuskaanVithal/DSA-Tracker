@@ -1,0 +1,126 @@
+#include <iostream>
+using namespace std;
+
+class Node
+{
+public:
+	int data;
+	Node *next;
+	Node(int data)
+	{
+		this->data = data;
+		this->next = NULL;
+	}
+};
+
+
+Node *evenAfterOdd(Node *head)
+{
+	//write your code here
+	 if(head==NULL || head->next ==NULL)
+        return head ;
+    
+	Node* oddh =NULL ;
+    Node* evenh = NULL ;
+    Node* oddt = NULL ;
+    Node* event = NULL ;
+    
+    while(head!=NULL)
+    {
+        //even
+        if(head->data %2 == 0)
+        {
+            if(evenh == NULL)
+            {
+                evenh =head ;
+                event = head ;
+                head=head->next ;
+            }
+            else
+            {
+                event->next = head ;
+                event =head ;
+                head=head->next ;
+            }
+        }
+        else
+        {
+            //odd 
+             if(oddh == NULL)
+            {
+                oddh =head ;
+                oddt = head ;
+                head=head->next ;
+            }
+            else
+            {
+                oddt->next = head ;
+                oddt = head ;
+                head=head->next ;
+            }
+        }
+        
+    }
+    if(oddt!=NULL)
+    {
+        oddt->next = NULL;
+    	
+    }
+    else
+    {
+        event->next =NULL ;
+        return evenh ;
+    }
+    if(event!=NULL)
+    {
+        event->next =oddh ;
+        return evenh;
+    }
+    else
+    {
+        return oddh ;
+    }
+}
+
+Node *takeinput()
+{
+	int data;
+	cin >> data;
+	Node *head = NULL, *tail = NULL;
+	while (data != -1)
+	{
+		Node *newnode = new Node(data);
+		if (head == NULL)
+		{
+			head = newnode;
+			tail = newnode;
+		}
+		else
+		{
+			tail->next = newnode;
+			tail = newnode;
+		}
+		cin >> data;
+	}
+	return head;
+}
+
+void print(Node *head)
+{
+	Node *temp = head;
+	while (temp != NULL)
+	{
+		cout << temp->data << " ";
+		temp = temp->next;
+	}
+	cout << endl;
+}
+
+int main()
+{
+		Node *head = takeinput();
+		head = evenAfterOdd(head);
+		print(head);
+	
+	  return 0;
+}
